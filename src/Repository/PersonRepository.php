@@ -19,7 +19,7 @@ class PersonRepository extends ServiceEntityRepository implements PasswordUpgrad
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, User::class);
+        parent::__construct($registry, Person::class);
     }
 
     /**
