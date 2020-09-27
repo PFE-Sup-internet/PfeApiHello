@@ -26,7 +26,7 @@ class AppFixtures extends Fixture
     {
         // admin user
         $user = new User();
-        $plainPassword = 'motdepas';
+        $plainPassword = 'password';
         $encoded = $this->encoder->encodePassword($user, $plainPassword);
 
         $user->setUsername('admin')
