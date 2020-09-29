@@ -177,7 +177,7 @@ class Person implements UserInterface
      */
     public function getTasks(): Collection
     {
-        return $this->tickets;
+        return $this->tasks;
     }
 
     public function addTask(Task $task): self
