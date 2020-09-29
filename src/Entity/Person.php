@@ -62,7 +62,7 @@ class Person implements UserInterface
     private $teams;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=180, unique=true,nullable=true)
      */
     private $email;
 
