@@ -10,11 +10,16 @@ use App\Repository\PersonRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity(repositoryClass=PersonRepository::class)
- * @ApiResource
+ * @ApiResource(
+ *     normalizationContext={"groups"={"user:read"}},
+ *     denormalizationContext={"groups"={"user:write"}}
+ * )
  */
 class Person implements UserInterface
 {
@@ -22,16 +27,20 @@ class Person implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * @Groups({"user:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"user:read","user:write"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"user:read"})
      */
     private $roles = [];
 
@@ -42,27 +51,37 @@ class Person implements UserInterface
     private $password;
 
     /**
+     * @Groups({"user:write"})
+     * @SerializedName("password")
+     */
+    private $plainPassword;
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="creator")
+     * @Groups({"user:read","user:write"})
      */
     private $tasks;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="creator")
+     * @Groups({"user:read","user:write"})
      */
     private $messages;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Task", inversedBy="assignedUsers")
      * @ORM\JoinTable(name="users_tasks")
+     * @Groups({"user:read","user:write"})
      */
     private $assignedTasks;
     /**
      * @ORM\ManyToMany(targetEntity=Team::class, mappedBy="Members")
+     * @Groups({"user:read","user:write"})
      */
     private $teams;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true,nullable=true)
+     * @Groups({"user:read","user:write"})
      */
     private $email;
 
@@ -135,14 +154,6 @@ class Person implements UserInterface
         // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
 
     /**
      * @return Collection|Team[]
@@ -278,5 +289,34 @@ class Person implements UserInterface
         $this->email = $email;
 
         return $this;
+    }
+
+    /**
+     * Get the value of plainPassword
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * Set the value of plainPassword
+     *
+     * @return  self
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        $this->plainPassword = null;
     }
 }

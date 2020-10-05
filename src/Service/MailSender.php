@@ -28,7 +28,8 @@ class MailSender
         $creator = $task->getCreator();
         $email = (new Email())
             ->from($creator->getEmail())
-            ->to($creator->getEmail())
+            //->to($creator->getEmail())
+            ->to("samuel.simonney@gmail.com")
             ->addTo(...$toADresses)
             ->subject('Task n°' . $task->getId() . ' a été mis à jour')
             ->text('L\'utilisateur ' . $user->getUserName() . ' a effectué une modification')
