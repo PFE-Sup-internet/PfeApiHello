@@ -33,29 +33,29 @@ class AppFixtures extends Fixture
             $plainPassword = 'password';
             $encoded = $this->encoder->encodePassword($user, $plainPassword);
 
-            $user->setEmail($faker->email)
+            $user->setEmail("admin@admin.fr")
                 ->setPassword($encoded);
             $manager->persist($user);
             for ($t = 0; $t < 3; $t++) {
                 $trip = new Trip();
                 $trip->setTitle($faker->title())
-                     ->setDescription($faker->text())
-                     ->setNotation(8);
-                     for ($l = 0; $l < 3; $l++) {
-                         $location = new Location();
-                         $location->setLatitude($faker->randomFloat())
-                                    ->setLongitude(mt_rand (-180*10, 180*10) / 10)
-                                    ->setTitle($faker->title)
-                                    ->setDescription($faker->text())
-                                    ->setTrip($trip);
-                                    $manager->persist($location);
-                     }
-                     $manager->persist($trip);
+                    ->setDescription($faker->text())
+                    ->setNotation(8);
+                for ($l = 0; $l < 3; $l++) {
+                    $location = new Location();
+                    $location->setLatitude($faker->randomFloat())
+                        ->setLongitude(mt_rand(-180 * 10, 180 * 10) / 10)
+                        ->setTitle($faker->title)
+                        ->setDescription($faker->text())
+                        ->setTrip($trip);
+                    $manager->persist($location);
+                }
+                $manager->persist($trip);
             }
         }
 
         // admin user
-       
+
 
         $manager->flush();
     }
