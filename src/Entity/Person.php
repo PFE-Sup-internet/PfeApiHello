@@ -2,23 +2,34 @@
 
 namespace App\Entity;
 
-use App\Entity\Task;
-use App\Entity\Team;
-use App\Entity\Message;
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\PersonRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\GetMeAction;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
+
 /**
- * @ORM\Entity(repositoryClass=PersonRepository::class)
+ * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"user:read"}},
- *     denormalizationContext={"groups"={"user:write"}}
+ *  normalizationContext={"groups"={"user:read"}},
+ *     denormalizationContext={"groups"={"user:write"}},
+ *  itemOperations={
+ *          "get_me"={
+ *             "method"="GET",
+ *             "path"="/user",
+ *             "controller"=GetMeAction::class,
+ *             "openapi_context"={
+ *                 "parameters"={}
+ *             },
+ *             "read"=false
+ *         },
+ *         "get",
+ *     }
  * )
  */
 class Person implements UserInterface
@@ -27,20 +38,19 @@ class Person implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * 
      * @Groups({"user:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"user:read","user:write"})
+     *  @Groups({"user:read","user:write"})
      */
-    private $username;
+    private $email;
 
     /**
      * @ORM\Column(type="json")
-     * @Groups({"user:read"})
+     * Groups({"user:read"})
      */
     private $roles = [];
 
@@ -50,49 +60,37 @@ class Person implements UserInterface
      */
     private $password;
 
-    /**
-     * @Groups({"user:write"})
-     * @SerializedName("password")
-     */
-    private $plainPassword;
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="creator")
-     * @Groups({"user:read","user:write"})
-     */
-    private $tasks;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="creator")
-     * @Groups({"user:read","user:write"})
-     */
-    private $messages;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Task", inversedBy="assignedUsers")
-     * @ORM\JoinTable(name="users_tasks")
-     * @Groups({"user:read","user:write"})
-     */
-    private $assignedTasks;
-    /**
-     * @ORM\ManyToMany(targetEntity=Team::class, mappedBy="Members")
-     * @Groups({"user:read","user:write"})
-     */
-    private $teams;
-
-    /**
-     * @ORM\Column(type="string", length=180, unique=true,nullable=true)
-     * @Groups({"user:read","user:write"})
-     */
-    private $email;
-
-    public function __construct()
-    {
-        $this->teams = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @SerializedName("password")
+     * @Groups({"user:write"})
+     */
+    private $plainPassword;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Trip::class, mappedBy="author", orphanRemoval=true)
+     */
+    private $trips;
+
+    public function __construct()
+    {
+        $this->trips = new ArrayCollection();
     }
 
     /**
@@ -102,14 +100,7 @@ class Person implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
-    }
-
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
+        return (string) $this->email;
     }
 
     /**
@@ -154,144 +145,16 @@ class Person implements UserInterface
         // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
-
     /**
-     * @return Collection|Team[]
+     * @see UserInterface
      */
-    public function getTeams(): Collection
+    public function eraseCredentials()
     {
-        return $this->teams;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
-    public function addTeam(Team $team): self
-    {
-        if (!$this->teams->contains($team)) {
-            $this->teams[] = $team;
-            $team->addMember($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTeam(Team $team): self
-    {
-        if ($this->teams->contains($team)) {
-            $this->teams->removeElement($team);
-            $team->removeMember($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Task[]
-     */
-    public function getTasks(): Collection
-    {
-        return $this->tasks;
-    }
-
-    public function addTask(Task $task): self
-    {
-        if (!$this->tasks->contains($task)) {
-            $this->tasks[] = $task;
-            $task->setCreator($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTask(Task $task): self
-    {
-        if ($this->tasks->contains($task)) {
-            $this->tasks->removeElement($task);
-            // set the owning side to null (unless already changed)
-            if ($task->getCreator() === $this) {
-                $task->setCreator(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Message[]
-     */
-    public function getMessages(): Collection
-    {
-        return $this->messages;
-    }
-
-    public function addMessage(Message $message): self
-    {
-        if (!$this->messages->contains($message)) {
-            $this->messages[] = $message;
-            $message->setCreator($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessage(Message $message): self
-    {
-        if ($this->messages->contains($message)) {
-            $this->messages->removeElement($message);
-            // set the owning side to null (unless already changed)
-            if ($message->getCreator() === $this) {
-                $message->setCreator(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Task[]
-     */
-    public function getAssignedTasks(): Collection
-    {
-        return $this->assignedTasks;
-    }
-
-    public function addAssignedTask(Task $assignedTask): self
-    {
-        if (!$this->assignedTasks->contains($assignedTask)) {
-            $this->assignedTasks[] = $assignedTask;
-        }
-        return $this;
-    }
-
-    public function removeAssignedTask(Task $assignedTask): self
-    {
-        if ($this->assignedTasks->contains($assignedTask)) {
-            $this->assignedTasks->removeElement($assignedTask);
-        }
-
-        return $this;
-    }
-
-    /**
-     * toString
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->getUsername();
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
+       /**
      * Get the value of plainPassword
      */
     public function getPlainPassword()
@@ -312,11 +175,33 @@ class Person implements UserInterface
     }
 
     /**
-     * @see UserInterface
+     * @return Collection|Trip[]
      */
-    public function eraseCredentials()
+    public function getTrips(): Collection
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        $this->plainPassword = null;
+        return $this->trips;
+    }
+
+    public function addTrip(Trip $trip): self
+    {
+        if (!$this->trips->contains($trip)) {
+            $this->trips[] = $trip;
+            $trip->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrip(Trip $trip): self
+    {
+        if ($this->trips->contains($trip)) {
+            $this->trips->removeElement($trip);
+            // set the owning side to null (unless already changed)
+            if ($trip->getAuthor() === $this) {
+                $trip->setAuthor(null);
+            }
+        }
+
+        return $this;
     }
 }
