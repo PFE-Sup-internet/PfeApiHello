@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  * normalizationContext={
- *     "groups"={"trips_read"}
+ *     "groups"={"trips:read"}
  *  },
  * )
  * @ORM\Entity(repositoryClass=TripRepository::class)
@@ -29,18 +29,19 @@ class Trip
 
     /**
      * @ORM\Column(type="integer")
-     * Groups({"trips_read"})
+     * @Groups({"trips:read"})
      */
     private $notation;
 
     /**
      * @ORM\OneToMany(targetEntity=Location::class, mappedBy="trip", orphanRemoval=true)
+     * @Groups({"trips:read"})
      */
     private $step;
 
     /**
      * @ORM\Column(type="text")
-     * Groups({"trips_read"})
+     * @Groups({"trips:read"})
      */
     private $description;
 
@@ -52,14 +53,14 @@ class Trip
 
     /**
      * @ORM\Column(type="string", length=255)
-     * Groups({"user:read"})
+     * @Groups({"trips:read"})
      */
     private $title;
 
     /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="trips")
      * @ORM\JoinColumn(nullable=false)
-     * Groups({"user:read"})
+     * @Groups({"trips:read"})
      */
     private $type;
 

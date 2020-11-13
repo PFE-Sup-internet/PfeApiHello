@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Location;
 use App\Entity\Trip;
 use App\Entity\Person;
+use App\Entity\Type;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Faker\Factory;
@@ -27,18 +28,31 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+
         $faker = Factory::create("fr_FR");
+        $userAdmin = new Person();
+        $plainPassword = 'password';
+        $encoded = $this->encoder->encodePassword($userAdmin, $plainPassword);
+        $userAdmin->setEmail("admin@admin.fr")
+            ->setPassword($encoded);
+        $manager->persist($userAdmin);
+        $type = new Type();
+        $type->setName("totot");
+        $manager->persist($type);
         for ($u = 0; $u < 10; $u++) {
             $user = new Person();
             $plainPassword = 'password';
             $encoded = $this->encoder->encodePassword($user, $plainPassword);
 
-            $user->setEmail("admin@admin.fr")
+            $user->setEmail($faker->email)
                 ->setPassword($encoded);
             $manager->persist($user);
+
             for ($t = 0; $t < 3; $t++) {
                 $trip = new Trip();
                 $trip->setTitle($faker->title())
+                    ->setAuthor($user)
+                    ->setType($type)
                     ->setDescription($faker->text())
                     ->setNotation(8);
                 for ($l = 0; $l < 3; $l++) {

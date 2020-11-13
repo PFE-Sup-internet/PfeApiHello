@@ -1,3 +1,2 @@
-php bin/console d:s:u --force
-php bin/console doctrine:fixtures:load
+web: php bin/console d:s:u --force
 web: heroku-php-apache2 public/
