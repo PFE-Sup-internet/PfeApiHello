@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\LocationRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +32,7 @@ class Location
 
     /**
      * @ORM\Column(type="text")
+     * Groups({"user:read"})
      */
     private $description;
 
@@ -42,6 +44,7 @@ class Location
 
     /**
      * @ORM\Column(type="string", length=255)
+     * Groups({"user:read"})
      */
     private $title;
 

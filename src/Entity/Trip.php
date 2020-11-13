@@ -7,9 +7,15 @@ use App\Repository\TripRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * normalizationContext={
+ *     "groups"={"trips_read"}
+ *  },
+ * )
  * @ORM\Entity(repositoryClass=TripRepository::class)
  */
 class Trip
@@ -23,6 +29,7 @@ class Trip
 
     /**
      * @ORM\Column(type="integer")
+     * Groups({"trips_read"})
      */
     private $notation;
 
@@ -33,6 +40,7 @@ class Trip
 
     /**
      * @ORM\Column(type="text")
+     * Groups({"trips_read"})
      */
     private $description;
 
@@ -44,8 +52,16 @@ class Trip
 
     /**
      * @ORM\Column(type="string", length=255)
+     * Groups({"user:read"})
      */
     private $title;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="trips")
+     * @ORM\JoinColumn(nullable=false)
+     * Groups({"user:read"})
+     */
+    private $type;
 
     public function __construct()
     {
@@ -132,6 +148,18 @@ class Trip
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getType(): ?Type
+    {
+        return $this->type;
+    }
+
+    public function setType(?Type $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\GetMeAction;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -26,7 +27,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  *             "openapi_context"={
  *                 "parameters"={}
  *             },
- *             "read"=false
+ *             "read"=true
  *         },
  *         "get",
  *     }
@@ -57,6 +58,7 @@ class Person implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * Groups({"user:read"})
      */
     private $password;
 
@@ -84,7 +86,9 @@ class Person implements UserInterface
     private $plainPassword;
 
     /**
+     * @ApiSubresource()
      * @ORM\OneToMany(targetEntity=Trip::class, mappedBy="author", orphanRemoval=true)
+     * Groups({"user:read"})
      */
     private $trips;
 

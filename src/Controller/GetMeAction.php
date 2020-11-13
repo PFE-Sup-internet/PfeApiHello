@@ -11,11 +11,11 @@ final class GetMeAction extends AbstractController
     /**
     * @return User
     */
-    public function __invoke(): User
+    public function __invoke()
     {
-        /** @var User $user */
+        /** @var Person $user */
         $user = $this->getUser();
         
-        return $user;
+        return $user->getTrips();
     }
 }
