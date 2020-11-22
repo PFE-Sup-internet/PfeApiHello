@@ -22,11 +22,13 @@ class Location
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"user:read"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"user:read"})
      */
     private $longitude;
 

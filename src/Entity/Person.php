@@ -19,17 +19,12 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  * @ApiResource(
  *  normalizationContext={"groups"={"user:read"}},
  *     denormalizationContext={"groups"={"user:write"}},
- *  itemOperations={
- *          "get_me"={
- *             "method"="GET",
- *             "path"="/user",
- *             "controller"=GetMeAction::class,
- *             "openapi_context"={
- *                 "parameters"={}
- *             },
- *             "read"=true
+ *  itemOperations={"GET","PUT","POST","get_me"={
+ *             "method"="get",
+ *             "path"="/user/me",
+ *             "controller"="App\Controller\GetMeAction",
+ *             "read"=false
  *         },
- *         "get",
  *     }
  * )
  */
@@ -58,7 +53,6 @@ class Person implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups({"user:read"})
      */
     private $password;
 
