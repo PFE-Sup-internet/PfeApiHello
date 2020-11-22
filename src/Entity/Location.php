@@ -32,7 +32,7 @@ class Location
 
     /**
      * @ORM\Column(type="text")
-     * Groups({"user:read"})
+     * @Groups({"user:read"})
      */
     private $description;
 
@@ -44,7 +44,7 @@ class Location
 
     /**
      * @ORM\Column(type="string", length=255)
-     * Groups({"user:read"})
+     * @Groups({"user:read"})
      */
     private $title;
 

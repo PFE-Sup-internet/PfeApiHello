@@ -51,14 +51,14 @@ class Person implements UserInterface
 
     /**
      * @ORM\Column(type="json")
-     * Groups({"user:read"})
+     * @Groups({"user:read"})
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * Groups({"user:read"})
+     * @Groups({"user:read"})
      */
     private $password;
 
@@ -88,7 +88,7 @@ class Person implements UserInterface
     /**
      * @ApiSubresource()
      * @ORM\OneToMany(targetEntity=Trip::class, mappedBy="author", orphanRemoval=true)
-     * Groups({"user:read"})
+     * @Groups({"user:read"})
      */
     private $trips;
 
@@ -158,7 +158,7 @@ class Person implements UserInterface
         // $this->plainPassword = null;
     }
 
-       /**
+    /**
      * Get the value of plainPassword
      */
     public function getPlainPassword()
