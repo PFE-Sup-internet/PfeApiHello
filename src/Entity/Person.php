@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  * @ApiResource(
  *  normalizationContext={"groups"={"user:read"}},
  *     denormalizationContext={"groups"={"user:write"}},
- *  itemOperations={"GET","PUT","POST","get_me"={
+ *  itemOperations={"GET","PUT","get_me"={
  *             "method"="get",
  *             "path"="/user/me",
  *             "controller"="App\Controller\GetMeAction",
