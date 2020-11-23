@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\LocationRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Repository\LocationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * denormalizationContext={"groups"={"location:write"}},
+ * )
  * @ORM\Entity(repositoryClass=LocationRepository::class)
  */
 class Location
@@ -22,31 +24,32 @@ class Location
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"user:read"})
+     * @Groups({"user:read","location:write"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"user:read"})
+     * @Groups({"user:read","location:write"})
      */
     private $longitude;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"user:read"})
+     * @Groups({"user:read","location:write"})
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity=Trip::class, inversedBy="step")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"location:write"})
      */
     private $trip;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user:read"})
+     * @Groups({"user:read","location:write"})
      */
     private $title;
 

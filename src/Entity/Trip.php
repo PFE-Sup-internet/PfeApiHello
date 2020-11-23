@@ -12,9 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- * denormalizationContext={
- *     "groups"={"trips:read"}
- *  },
+ * denormalizationContext={"groups"={"trip:write"}},
  * )
  * @ORM\Entity(repositoryClass=TripRepository::class)
  */
@@ -30,7 +28,7 @@ class Trip
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"user:read"})
+     * @Groups({"user:read","trip:write"})
      */
     private $notation;
 
@@ -42,26 +40,27 @@ class Trip
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"user:read"})
+     * @Groups({"user:read","trip:write"})
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity=Person::class, inversedBy="trips")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"trip:write"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user:read"})
+     * @Groups({"user:read","trip:write"})
      */
     private $title;
 
     /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="trips")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"user:read"})
+     * @Groups({"user:read","trip:write"})
      */
     private $type;
 

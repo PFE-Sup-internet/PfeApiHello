@@ -11,7 +11,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * denormalizationContext={"groups"={"type:write"}},
+ * )
  * @ORM\Entity(repositoryClass=TypeRepository::class)
  */
 class Type
@@ -25,6 +27,7 @@ class Type
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"type:write"})
      */
     private $name;
 
