@@ -24,45 +24,45 @@ class Trip
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"trip:read","user:read"})
+     * @Groups({"user:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"trip:read","trip:write","user:read"})
+     * @Groups({"trip:write","user:read"})
      */
     private $notation;
 
     /**
      * @ORM\OneToMany(targetEntity=Location::class, mappedBy="trip", orphanRemoval=true)
-     * @Groups({"trip:read","user:read"})
+     * @Groups({"user:read"})
      */
     private $step;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"trip:read","trip:write","user:read"})
+     * @Groups({"trip:write","user:read"})
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity=Person::class, inversedBy="trips")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"trip:write","user:read"})
+     * @Groups({"trip:write"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"trip:read","trip:write","user:read"})
+     * @Groups({"trip:write","user:read"})
      */
     private $title;
 
     /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="trips")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"trip:read","trip:write","user:read"})
+     * @Groups({"trip:write"})
      */
     private $type;
 
