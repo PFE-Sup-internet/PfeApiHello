@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"trip:read"}},
+ *     "normalization_context"={"groups"={"trip:read",}},
  *     "denormalization_context"={"groups"={"write"}}
  * })
  * @ORM\Entity(repositoryClass=TripRepository::class)
@@ -24,45 +24,45 @@ class Trip
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"trip:read"})
+     * @Groups({"trip:read","user:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"trip:read","trip:write"})
+     * @Groups({"trip:read","trip:write","user:read"})
      */
     private $notation;
 
     /**
      * @ORM\OneToMany(targetEntity=Location::class, mappedBy="trip", orphanRemoval=true)
-     * @Groups({"trip:read"})
+     * @Groups({"trip:read","user:read"})
      */
     private $step;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"trip:read","trip:write"})
+     * @Groups({"trip:read","trip:write","user:read"})
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity=Person::class, inversedBy="trips")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"trip:write"})
+     * @Groups({"trip:write","user:read"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"trip:read","trip:write"})
+     * @Groups({"trip:read","trip:write","user:read"})
      */
     private $title;
 
     /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="trips")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"trip:read","trip:write"})
+     * @Groups({"trip:read","trip:write","user:read"})
      */
     private $type;
 
