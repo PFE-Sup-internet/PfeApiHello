@@ -8,9 +8,10 @@ use App\Repository\LocationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(
- * denormalizationContext={"groups"={"location:write"}},
- * )
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"trip:read"}},
+ *     "denormalization_context"={"groups"={"location:write"}}
+ * })
  * @ORM\Entity(repositoryClass=LocationRepository::class)
  */
 class Location
@@ -24,19 +25,19 @@ class Location
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"user:read","location:write"})
+     * @Groups({"trip:read","location:write"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"user:read","location:write"})
+     * @Groups({"trip:read","location:write"})
      */
     private $longitude;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"user:read","location:write"})
+     * @Groups({"trip:read","location:write"})
      */
     private $description;
 
@@ -49,7 +50,7 @@ class Location
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user:read","location:write"})
+     * @Groups({"trip:read","location:write"})
      */
     private $title;
 

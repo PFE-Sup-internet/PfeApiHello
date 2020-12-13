@@ -2,18 +2,20 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\TripRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TripRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
- * @ApiResource(
- * denormalizationContext={"groups"={"trip:write"}},
- * )
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"trip:read"}},
+ *     "denormalization_context"={"groups"={"write"}}
+ * })
  * @ORM\Entity(repositoryClass=TripRepository::class)
  */
 class Trip
@@ -22,25 +24,25 @@ class Trip
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"user:read"})
+     * @Groups({"trip:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"user:read","trip:write"})
+     * @Groups({"trip:read","trip:write"})
      */
     private $notation;
 
     /**
      * @ORM\OneToMany(targetEntity=Location::class, mappedBy="trip", orphanRemoval=true)
-     * @Groups({"user:read"})
+     * @Groups({"trip:read"})
      */
     private $step;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"user:read","trip:write"})
+     * @Groups({"trip:read","trip:write"})
      */
     private $description;
 
@@ -53,14 +55,14 @@ class Trip
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user:read","trip:write"})
+     * @Groups({"trip:read","trip:write"})
      */
     private $title;
 
     /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="trips")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"user:read","trip:write"})
+     * @Groups({"trip:read","trip:write"})
      */
     private $type;
 
