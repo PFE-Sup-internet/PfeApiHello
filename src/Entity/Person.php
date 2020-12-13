@@ -2,22 +2,23 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\Common\Collections\Collection;
-use ApiPlatform\Core\Annotation\ApiSubresource;
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\GetMeAction;
+use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ApiResource(
- *  normalizationContext={"groups"={"user:read"}},
+ *  normalizationContext={"groups"={"user:read"}, "enable_max_depth"=true},
  *     denormalizationContext={"groups"={"user:write"}},
  *  itemOperations={"GET","PUT","get_me"={
  *             "method"="get",
@@ -83,6 +84,7 @@ class Person implements UserInterface
      * @ApiSubresource()
      * @ORM\OneToMany(targetEntity=Trip::class, mappedBy="author", orphanRemoval=true)
      * @Groups({"user:read"})
+     * @MaxDepth(2)
      */
     private $trips;
 

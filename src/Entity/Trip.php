@@ -49,7 +49,7 @@ class Trip
     /**
      * @ORM\ManyToOne(targetEntity=Person::class, inversedBy="trips")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"trip:write"})
+     * @Groups({"trip:write","user:read"})
      */
     private $author;
 
