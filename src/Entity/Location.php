@@ -25,19 +25,19 @@ class Location
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"trip:read","location:write"})
+     * @Groups({"user:read","location:write"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"trip:read","location:write"})
+     * @Groups({"user:read","location:write"})
      */
     private $longitude;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"trip:read","location:write"})
+     * @Groups({"user:read","location:write"})
      */
     private $description;
 
@@ -50,7 +50,7 @@ class Location
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"trip:read","location:write"})
+     * @Groups({"user:read","location:write"})
      */
     private $title;
 
