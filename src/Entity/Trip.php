@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(attributes={
  *     "normalization_context"={"groups"={"user:read",}},
- *     "denormalization_context"={"groups"={"write"}}
+ *     "denormalization_context"={"groups"={"trip:write"}}
  * })
  * @ORM\Entity(repositoryClass=TripRepository::class)
  */
